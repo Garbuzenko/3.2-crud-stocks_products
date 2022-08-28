@@ -47,13 +47,13 @@ class StockSerializer(serializers.ModelSerializer):
         stock = super().update(instance, validated_data)
 
         # заполнение связанной таблицы StockProduct
-        self.update_positions(positions,stock)
+        self.update_positions(positions, stock)
         return stock
-    def update_positions(self, positions,stock):
+    def update_positions(self, positions, stock):
         for item in positions:
-            StockProduct.objects.update_or_create(
-                product=item['product'],
+            StockProduct.objects.update_or_create(stock=stock, product=item['product'],
+                defaults=dict(
                 price=item['price'],
-                quantity=item['quantity'],
-                stock=stock
+                quantity=item['quantity']
+                )
             )
